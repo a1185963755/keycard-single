@@ -165,10 +165,7 @@ export class KeyCardsService {
       const result = await res.json();
       if (result?.code === 0) {
         const couponData = result.data.allCoupons
-          .filter(
-            (item: any) =>
-              item.jumppageType === 8 && item.couponName.includes('外卖'),
-          )
+          .filter((item: any) => item.jumppageType === 8)
           .map((item: any) => {
             const user = item.useCondition.match(/\d{3}\*\*\*\*\d{4}/g)[0];
             return {
@@ -218,10 +215,7 @@ export class KeyCardsService {
       const result = await res.json();
       if (result?.code === 0) {
         const couponData = result.data.allCoupons
-          .filter(
-            (item: any) =>
-              item.jumppageType === 8 && item.couponName.includes('外卖'),
-          )
+          .filter((item: any) => item.jumppageType === 8)
           .map((item: any) => {
             const user = item.useCondition.match(/\d{3}\*\*\*\*\d{4}/g)[0];
             return {
