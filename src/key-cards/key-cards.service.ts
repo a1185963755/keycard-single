@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { KeyCard, KeyCardStatus } from './entities/key-card.entity';
@@ -38,6 +43,9 @@ export class KeyCardsService {
       this.getCoupon2(mtToken),
     ]);
     const flatCouponData = couponData.flat();
+    if (flatCouponData.length === 0) {
+      throw new HttpException('领券失败，请稍后重试', HttpStatus.NOT_FOUND);
+    }
     // 首次使用，设置首次使用时间和过期时间
     const now = new Date();
     keyCard.firstUseTime = now;
@@ -163,6 +171,7 @@ export class KeyCardsService {
         },
       );
       const result = await res.json();
+      console.log('🚀 ~ KeyCardsService ~ getCoupon1 ~ result:', result);
       if (result?.code === 0) {
         const couponData = result.data.allCoupons
           .filter((item: any) => item.jumppageType === 8)
