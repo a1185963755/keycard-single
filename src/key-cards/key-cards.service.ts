@@ -143,8 +143,8 @@ export class KeyCardsService {
           body: JSON.stringify({
             gundamId: 531693,
             instanceId: '17211892932540.47486483758713405',
-            actualLongitude: 0,
-            actualLatitude: 0,
+            actualLongitude: 114174328,
+            actualLatitude: 22316555,
             needTj: false,
             couponConfigIdOrderCommaString:
               '45103988015753,44617127887497,45291946771081,44430111474313,44525912457865,45448001880713,44755597656713,44602983514761,45299878134409,45366598042249,44769143751305,45406499832457,44665315328649,35503293858441,35506573542025,35506322080393,35364990026377,35371666506377,8650758750857,15632696017545,14306048017033,9137512120969,28345521341065,31167410864777,45292716950153',
@@ -196,8 +196,8 @@ export class KeyCardsService {
           body: JSON.stringify({
             gundamId: 567871,
             instanceId: '17507780765510.30596112212390103',
-            actualLongitude: 0,
-            actualLatitude: 0,
+            actualLongitude: 114174328,
+            actualLatitude: 22316555,
             needTj: false,
             couponConfigIdOrderCommaString:
               '1333897255,1470149937,1930959778,1653365363,1703895443,1726487817,1253454975,1461317209,1437320701,1182630451',
