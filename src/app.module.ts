@@ -12,7 +12,8 @@ import { KeyCardGuard } from './guards/key-card.guard';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '47.106.209.17',
+      host:
+        process.env.NODE_ENV !== 'production' ? '47.106.209.17' : 'localhost',
       port: 3307,
       username: 'shangyin',
       password: 'oliver1101@',

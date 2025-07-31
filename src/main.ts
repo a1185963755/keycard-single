@@ -26,7 +26,9 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // 启用CORS
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost'],
+  });
 
   console.log('NODE_ENV', process.env.NODE_ENV);
 
