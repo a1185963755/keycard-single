@@ -7,24 +7,37 @@ import { KeyCard } from './key-cards/entities/key-card.entity';
 import { Batch } from './key-cards/entities/batch.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { KeyCardGuard } from './guards/key-card.guard';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host:
-        process.env.NODE_ENV !== 'production' ? '47.106.209.17' : 'localhost',
-      port: 3307,
-      username: 'shangyin',
-      password: 'oliver1101@',
-      database: 'mt',
-      entities: [KeyCard, Batch],
-      synchronize: true, // 开发环境使用，生产环境不建议
-      extra: {
-        // 关闭 TypeORM 的时区转换（MySQL 5.5 不支持高精度时间戳）
-        timezone: 'local',
-      },
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host:
+          process.env.NODE_ENV !== 'production'
+            ? configService.get('DB_HOST')
+            : 'localhost',
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [KeyCard, Batch],
+        synchronize: true, // 开发环境使用，生产环境不建议
+        extra: {
+          // 关闭 TypeORM 的时区转换（MySQL 5.5 不支持高精度时间戳）
+          timezone: 'local',
+        },
+      }),
+    }),
+    ScheduleModule.forRoot(),
     KeyCardsModule,
   ],
   controllers: [AppController],

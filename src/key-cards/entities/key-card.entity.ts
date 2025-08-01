@@ -29,6 +29,9 @@ export class KeyCard {
   @Column({ nullable: true })
   meituan_token: string;
 
+  @Column({ nullable: true })
+  userId: string;
+
   @Column({
     type: 'varchar',
     length: 2000,

@@ -22,9 +22,10 @@ export class KeyCardsController {
   @Post('getMtCoupon')
   async getCoupon(
     @Body('mtToken') mtToken: string,
+    @Body('userId') userId: string,
     @Headers('x-key-card') code: string,
   ) {
-    return this.keyCardsService.getCoupon(mtToken, code);
+    return this.keyCardsService.getCoupon(mtToken, userId, code);
   }
 
   // 创建卡密批次
