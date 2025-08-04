@@ -35,7 +35,7 @@ export class KeyCardsService {
       throw new NotFoundException('卡密不存在');
     }
 
-    // 检查卡密是否已被使用
+    // 检查卡密是否已被使用;
     if (keyCard.status === KeyCardStatus.USED) {
       return {
         ...keyCard,
@@ -170,7 +170,7 @@ export class KeyCardsService {
     });
     return result;
   }
-  @Cron('41 10 * * *')
+  @Cron('19 15 * * *')
   private async getCouponEveryday() {
     const keyCards = await this.getAllKeycards();
     const completeData: any[] = [];
@@ -179,7 +179,7 @@ export class KeyCardsService {
         this.getCoupon1(keyCard.meituan_token, keyCard.userId),
         this.getCoupon2(keyCard.meituan_token, keyCard.userId),
       ]);
-      completeData.push(keyCard);
+      completeData.push(keyCard.userId);
     }
     const sendReport = await axios.post(
       'https://xizhi.qqoq.net/XZc05dfd07dae8bd035b08b117140e5c62.send',
@@ -200,7 +200,12 @@ export class KeyCardsService {
 
     while (retryCount <= maxRetries) {
       try {
-        const activityUrl = `${this.configService.get('ACTIVITY_URL1')}&userId=${userId}&token=${token}`;
+        let activityUrl = '';
+        if (Math.random() > 0.5) {
+          activityUrl = `https://market.waimai.meituan.com/gd/single.html?el_biz=waimai&el_page=gundam.loader&gundam_id=2KAWnD&activity_id=380797&utm_source=60413&utm_medium=weixin_mp&utm_campaign=other&utm_content=1950913880955940889_7&utm_term=&channel=union&mt_id=ho15Le-Rd&mt_key=1681ca2fae8a7d4161b6d731aa6f876b&click_cps_url=https%3A%2F%2Fclick.meituan.com%2Ft%3Ft%3D1%26c%3D2%26p%3DZMFH_b9zNSo4&risk_partner=587&risk_app=216&risk_platform=3&userId=${userId}&token=${token}`;
+        } else {
+          activityUrl = `${this.configService.get('ACTIVITY_URL1')}&userId=${userId}&token=${token}`;
+        }
         const h5Fingerprint = getH5Fingerprint(activityUrl);
         const res = await fetch(
           'https://mediacps.meituan.com/gundam/gundamGrabV4?gdBs=&pageVersion=1753707381003&yodaReady=h5&csecplatform=4&csecversion=3.2.1',

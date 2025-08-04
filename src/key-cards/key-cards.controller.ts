@@ -59,4 +59,17 @@ export class KeyCardsController {
   async getKeyCardInfo(@Query('code') code: string) {
     return await this.keyCardsService.findKeyCardByCode(code);
   }
+
+  @Post('getCouponManual')
+  async getCouponManual(@Body('links') links: string[]) {
+    let res = links.map(async (link) => {
+      const mtToken = new URL(link).searchParams.get('token');
+      const userId = new URL(link).searchParams.get('userId');
+      if (!mtToken || !userId) {
+        return null;
+      }
+      return await this.keyCardsService.getCoupon1(mtToken, userId);
+    });
+    return await Promise.all(res);
+  }
 }

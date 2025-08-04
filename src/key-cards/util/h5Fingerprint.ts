@@ -8124,7 +8124,7 @@ export function getH5Fingerprint(url) {
     cts: Date.now(),
     brVD: [860, 1864],
     brR: [[430, 932], [430, 932], 24, 24],
-    bI: [url, 'https://passport.meituan.com/'],
+    bI: [url],
     mT: [],
     kT: [],
     aT: [],
