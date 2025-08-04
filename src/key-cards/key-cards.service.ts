@@ -170,27 +170,30 @@ export class KeyCardsService {
     });
     return result;
   }
-  @Cron('19 15 * * *')
+  @Cron('0 8 * * *')
   private async getCouponEveryday() {
+    const reportUrl = this.configService.get('XZ_URL');
+    if (!reportUrl) {
+      return;
+    }
     const keyCards = await this.getAllKeycards();
     const completeData: any[] = [];
     for (const keyCard of keyCards) {
-      await Promise.all([
+      const res = await Promise.all([
         this.getCoupon1(keyCard.meituan_token, keyCard.userId),
         this.getCoupon2(keyCard.meituan_token, keyCard.userId),
       ]);
-      completeData.push(keyCard.userId);
+      if (res[0].length > 0 || res[1].length > 0) {
+        completeData.push(keyCard.userId);
+      }
     }
-    const sendReport = await axios.post(
-      'https://xizhi.qqoq.net/XZc05dfd07dae8bd035b08b117140e5c62.send',
-      {
-        title: `领券成功${completeData.length}个`,
-        content: completeData.join('\n'),
-        date: null,
-        time: null,
-        type: null,
-      },
-    );
+    const sendReport = await axios.post(reportUrl, {
+      title: `领券成功${completeData.length}个`,
+      content: completeData.join('\n'),
+      date: null,
+      time: null,
+      type: null,
+    });
     return sendReport;
   }
 
