@@ -35,7 +35,11 @@
     "mysql2": "^3.14.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.24"
+    "typeorm": "^0.3.24",
+    "@wasmer/wasi": "^1.2.2",
+    "https-proxy-agent": "^7.0.6",
+    "timeout-signal": "^2.0.0",
+    "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

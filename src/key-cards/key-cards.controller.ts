@@ -64,11 +64,10 @@ export class KeyCardsController {
   async getCouponManual(@Body('links') links: string[]) {
     let res = links.map(async (link) => {
       const mtToken = new URL(link).searchParams.get('token');
-      const userId = new URL(link).searchParams.get('userId');
-      if (!mtToken || !userId) {
+      if (!mtToken) {
         return null;
       }
-      return await this.keyCardsService.getCoupon1(mtToken, userId);
+      return await this.keyCardsService.getCoupon1(mtToken);
     });
     return await Promise.all(res);
   }
