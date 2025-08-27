@@ -28,7 +28,6 @@ export class KeyCardsService {
 
   // 验证卡密
   async getCoupon(mtToken: string, userId: string, code: string) {
-    console.log('🚀 ~ KeyCardsService ~ getCoupon ~ mtToken:', mtToken);
     const keyCard = await this.keyCardRepository.findOne({
       where: { code },
     });
@@ -44,27 +43,30 @@ export class KeyCardsService {
         coupon_info: JSON.parse(keyCard.coupon_info),
       };
     }
-
-    const couponData = await Promise.all([
-      this.getCoupon1(mtToken),
-      this.getCoupon2(mtToken),
-    ]);
-    const flatCouponData = couponData.flat();
-    if (flatCouponData.length === 0) {
+    try {
+      const couponData = await Promise.all([
+        this.getCoupon1(mtToken),
+        this.getCoupon2(mtToken),
+      ]);
+      const flatCouponData = couponData.flat();
+      if (flatCouponData.length === 0) {
+        throw new HttpException('领券失败，请稍后重试', HttpStatus.NOT_FOUND);
+      }
+      // 首次使用，设置首次使用时间和过期时间
+      const now = new Date();
+      keyCard.firstUseTime = now;
+      keyCard.status = KeyCardStatus.USED;
+      keyCard.meituan_token = mtToken;
+      keyCard.userId = userId;
+      keyCard.coupon_info = JSON.stringify(flatCouponData);
+      await this.keyCardRepository.save(keyCard);
+      return {
+        ...keyCard,
+        coupon_info: JSON.parse(keyCard.coupon_info),
+      };
+    } catch (error) {
       throw new HttpException('领券失败，请稍后重试', HttpStatus.NOT_FOUND);
     }
-    // 首次使用，设置首次使用时间和过期时间
-    const now = new Date();
-    keyCard.firstUseTime = now;
-    keyCard.status = KeyCardStatus.USED;
-    keyCard.meituan_token = mtToken;
-    keyCard.userId = userId;
-    keyCard.coupon_info = JSON.stringify(flatCouponData);
-    await this.keyCardRepository.save(keyCard);
-    return {
-      ...keyCard,
-      coupon_info: JSON.parse(keyCard.coupon_info),
-    };
   }
 
   // 创建卡密批次
